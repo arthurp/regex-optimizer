@@ -13,7 +13,9 @@ sealed trait Regex {
 case class Any() extends Regex
 case class StartOfString() extends Regex
 case class EndOfString() extends Regex
-case class Character(c: Char) extends Regex
+case class Character(c: Char) extends Regex {
+  override def toString(): String = c.toString()
+}
 case class Star(r: Regex, greedy: Boolean = true) extends Regex
 case class Plus(r: Regex, greedy: Boolean = true) extends Regex
 case class Optional(r: Regex, greedy: Boolean = true) extends Regex

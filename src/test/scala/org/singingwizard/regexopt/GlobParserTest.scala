@@ -3,6 +3,7 @@ package org.singingwizard.regexopt
 import org.scalatest._
 import org.singingwizard.regexopt._
 import java.io.IOException
+import scala.io.Source
 
 class GlobParserTest extends FlatSpec with Matchers { 
   val star = Star(CharacterSet(Set(CharacterSingle('/')), true))
@@ -27,5 +28,12 @@ class GlobParserTest extends FlatSpec with Matchers {
   
   it should "parse special matchers" in {
     GlobParser.parse("[a-z]") should be (CharacterSet(Set(CharacterUnparsed("a-z"))))
+  }
+  
+  it should "parse all lines of test file" in {
+    for (line <- Source.fromInputStream(classOf[GlobParserTest].getResourceAsStream("test-input-ext.glob")).getLines()) {
+      if (line != "")
+        GlobParser.parse(line)
+    }
   }
 }
