@@ -20,7 +20,7 @@ case class Optional(r: Regex, greedy: Boolean = true) extends Regex
 case class Repetitions(r: Regex, n: Int, m: Int, greedy: Boolean = true) extends Regex
 case class Group(r: Regex, marker: String) extends Regex
 case class Escape(c: Char) extends Regex
-case class CharacterSet(cs: Set[CharacterSelector]) extends Regex
+case class CharacterSet(cs: Set[CharacterSelector], complement: Boolean = false) extends Regex
 case class Unparsed(s: String) extends Regex
 
 case class Alternative(rs: Seq[Regex]) extends Regex

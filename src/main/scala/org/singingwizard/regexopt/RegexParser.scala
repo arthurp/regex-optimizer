@@ -3,15 +3,7 @@ package org.singingwizard.regexopt
 import scala.util.parsing.combinator._
 import scala.util.parsing.input.CharSequenceReader
 
-object RegexParser extends Parsers with ImplicitConversions with PackratParsers {
-  implicit def listchar2string(l: List[Char]) = l.mkString("")
-  implicit def listchar2stringFunc[T](f: String => T)(l: List[Char]) = f(l.mkString(""))
-  implicit def string2ParserString(s: String) = accept(s.toList) ^^^ s
-
-  type Elem = Char
-
-  lazy val number = elem("digit", _.isDigit).+ ^^ (_.mkString("").toInt)
-
+object RegexParser extends CharParsers with PackratParsers {
   val specials = List(
     '.', '^', '$', '*', '+', '?', '{', '}', '(', ')', '[', ']', '|', '\\')
 
@@ -38,12 +30,13 @@ object RegexParser extends Parsers with ImplicitConversions with PackratParsers 
       ((regex ~ ('{' ~> number)) ~ (',' ~> number <~ "}?") ^^ ((r: Regex, n: Int, m: Int) => Repetitions(r, n, m, false)))
 
   lazy val other: PackratParser[Regex] =
-    ('[' ~> elem("character", _ != ']').+ <~ ']' ^^ ((s: List[Char]) => CharacterSet(Set(CharacterUnparsed(s)))))
+    ("[^" ~> elem("character", _ != ']').+ <~ ']' ^^ ((s: List[Char]) => CharacterSet(Set(CharacterUnparsed(s)), true))) |
+      ('[' ~> elem("character", _ != ']').+ <~ ']' ^^ ((s: List[Char]) => CharacterSet(Set(CharacterUnparsed(s)))))
 
   def unparsed(p: Char => Boolean) = elem("character", p).+ ^^ Unparsed
 
   lazy val group: PackratParser[Regex] =
-    "(?" ~> elem("character", c => !"()".contains(c) ).+ <~ ")" ^^ ((s: String) => Unparsed(s"(?$s)")) |
+    "(?" ~> elem("character", c => !"()".contains(c)).+ <~ ")" ^^ ((s: String) => Unparsed(s"(?$s)")) |
       "(" ~> regex <~ ")" ^^ (Group(_, ""))
 
   lazy val component: PackratParser[Regex] =
@@ -56,7 +49,7 @@ object RegexParser extends Parsers with ImplicitConversions with PackratParsers 
   lazy val regex: PackratParser[Regex] =
     component ~ regex ^^ (Sequence(_: Regex, _: Regex)) |
       component //|
-      //unparsed(_ => true)
+  //unparsed(_ => true)
 
   def parseOpt(s: String) =
     phrase(regex)(new CharSequenceReader(s))
