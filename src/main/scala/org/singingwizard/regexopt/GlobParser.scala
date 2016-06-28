@@ -12,8 +12,8 @@ object GlobParser extends CharParsers with PackratParsers {
       ('\\' ~> elem("special character", (c: Char) => specials contains c) ^^ Character)
 
   lazy val special: PackratParser[Regex] =
-    ("?" ^^^ Any()) |
-      ("**" ^^^ Star(Any())) |
+    ("?" ^^^ AnyCharacter()) |
+      ("**" ^^^ Star(AnyCharacter())) |
       ("*" ^^^ Star(CharacterSet(Set(CharacterSingle('/')), true))) |
       ('\\' ~> elem("character", (c: Char) => !(specials contains c)) ^^ Escape)
 

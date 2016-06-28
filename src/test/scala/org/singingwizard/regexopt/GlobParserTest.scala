@@ -7,7 +7,7 @@ import scala.io.Source
 
 class GlobParserTest extends FlatSpec with Matchers { 
   val star = Star(CharacterSet(Set(CharacterSingle('/')), true))
-  val starstar = Star(Any())
+  val starstar = Star(AnyCharacter())
   
   "The glob parser" should "parse simple character sequences correctly" in {
     GlobParser.parse("a") should be (Character('a'))
@@ -20,8 +20,8 @@ class GlobParserTest extends FlatSpec with Matchers {
   it should "parse simple combinators" in {
     GlobParser.parse("a**") should be (Sequence(Character('a'), starstar))
     GlobParser.parse("a*") should be (Sequence(Character('a'), star))
-    GlobParser.parse("a?") should be (Sequence(Character('a'), Any()))
-    GlobParser.parse("a??") should be (Sequence(Vector(Character('a'), Any(), Any())))
+    GlobParser.parse("a?") should be (Sequence(Character('a'), AnyCharacter()))
+    GlobParser.parse("a??") should be (Sequence(Vector(Character('a'), AnyCharacter(), AnyCharacter())))
     GlobParser.parse("a+a") should be (Sequence(Vector(Character('a'), Character('+'), Character('a'))))
     GlobParser.parse("ab*") should be (Sequence(Vector(Character('a'), Character('b'), star)))
   }

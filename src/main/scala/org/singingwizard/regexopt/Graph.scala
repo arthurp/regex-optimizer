@@ -24,6 +24,10 @@ abstract class Graph[E] {
     val nodes = orig.nodes
     val edges = orig.edges - e
   }
+  def --(e: Iterable[Edge]): Graph[E] = new Graph[E] {
+    val nodes = orig.nodes
+    val edges = orig.edges -- e
+  }
 
   def +(n: Node): Graph[E] = new Graph[E] {
     val nodes = orig.nodes + n
@@ -64,7 +68,7 @@ abstract class Graph[E] {
     edgesStr
   }
   
-  def equals(o: Any): Boolean = {
+  def equals(o: AnyCharacter): Boolean = {
     o.asInstanceOf[AnyRef] match {
       case g: Graph[E] => edges == g.edges && nodes == g.edges
       case _ => false
@@ -86,7 +90,7 @@ object Graph {
     
     def name = Option(_name)
   }
-  case class EdgeT[E](s: Node, l: E, t: Node)
+  case class EdgeT[E](s: Node, l: E, t: Node) extends PrecomputeHashcode
 
   def apply[E]() = new Graph[E] {
     val nodes = Set[Node]()

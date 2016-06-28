@@ -12,7 +12,7 @@ object RegexParser extends CharParsers with PackratParsers {
       ('\\' ~> elem("special character", (c: Char) => specials contains c) ^^ Character)
 
   lazy val special: PackratParser[Regex] =
-    ('.' ^^^ Any()) |
+    ('.' ^^^ AnyCharacter()) |
       ('^' ^^^ StartOfString()) |
       ('$' ^^^ EndOfString()) |
       ('\\' ~> elem("character", (c: Char) => !(specials contains c)) ^^ Escape)

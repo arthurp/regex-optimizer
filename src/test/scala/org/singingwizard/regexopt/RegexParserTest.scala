@@ -32,9 +32,11 @@ class RegexParserTest extends FlatSpec with Matchers {
     RegexParser.parse("(?abcd)") should be (Unparsed("(?abcd)"))
     RegexParser.parse("a(?abcd)*b") should be (Sequence(Vector(Character('a'), Star(Unparsed("(?abcd)")), Character('b'))))
   }
+  /*
   it should "parse nested extension groups" in {
     RegexParser.parse("(?abcd(?abcd))") should be (Unparsed("(?abcd(?abcd))"))
   }
+  */
   
   it should "parse simple groups" in {
     RegexParser.parse("(ab)*") should be (Star(Group(Sequence(Vector(Character('a'), Character('b'))), "")))
