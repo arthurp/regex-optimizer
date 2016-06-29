@@ -1,4 +1,6 @@
-package org.singingwizard.regexopt
+package org.singingwizard.regexopt.immutable
+
+import org.singingwizard.regexopt.PrecomputeHashcode
 
 abstract class Graph[E] {
   orig =>
@@ -68,8 +70,8 @@ abstract class Graph[E] {
     edgesStr
   }
   
-  def equals(o: AnyCharacter): Boolean = {
-    o.asInstanceOf[AnyRef] match {
+  override def equals(o: Any): Boolean = {
+    o match {
       case g: Graph[E] => edges == g.edges && nodes == g.edges
       case _ => false
     }

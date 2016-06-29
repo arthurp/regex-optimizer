@@ -1,4 +1,5 @@
-package org.singingwizard.regexopt
+package org.singingwizard.regexopt.immutable
+import org.singingwizard.regexopt._
 
 object RegexGraph {
   def apply(r: Regex): Graph[Regex] = {

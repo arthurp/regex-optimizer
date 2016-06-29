@@ -10,4 +10,10 @@ package object regexopt {
     }
     return v
   }
+
+  def untilFalse[T](max: Int = Int.MaxValue)(f: => Boolean): Unit = {
+    for (_ <- 0 until max) {
+      if (f) return ()
+    }
+  }
 }

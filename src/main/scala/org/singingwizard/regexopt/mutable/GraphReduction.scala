@@ -1,4 +1,6 @@
-package org.singingwizard.regexopt
+package org.singingwizard.regexopt.mutable
+
+import org.singingwizard.regexopt.untilFalse
 
 /** The goal of this object is to reduce a graph such that is still has
   * all the same paths (in terms of edge labels), but has fewer nodes and edges.
@@ -17,26 +19,33 @@ object GraphReduction {
       }
     }
 
-  def mergeNodeSet[E](g: Graph[E], ns: Set[Graph.Node]) = {
+  def mergeNodeSet[E](g: Graph[E], ns: Iterable[Graph.Node]) = {
     val target = ns.head
-    ns.foldLeft(g) { (g, n) =>
+    for (n <- ns) {
       g.merge(n, target)
     }
   }
 
   def mergeNodesByInEdges[E](g: Graph[E]) = {
     val nodeSets = partitionNodesByInEdges(g).values
-    nodeSets.foldLeft(g) { (g, ns) => mergeNodeSet(g, ns) }
+    for (ns <- nodeSets) {
+      mergeNodeSet(g, ns)
+    }
+    nodeSets.size > 0
   }
 
   def mergeNodesByOutEdges[E](g: Graph[E]) = {
     val nodeSets = partitionNodesByOutEdges(g).values
-    nodeSets.foldLeft(g) { (g, ns) => mergeNodeSet(g, ns) }
+    for (ns <- nodeSets) {
+      mergeNodeSet(g, ns)
+    }
+    nodeSets.size > 0
   }
 
   def apply[E](g: Graph[E]) = {
-    toFixedPoint(g) { (g: Graph[E]) =>
-      mergeNodesByOutEdges(mergeNodesByInEdges(g))
+    untilFalse() {
+      mergeNodesByInEdges(g) ||
+      mergeNodesByOutEdges(g)
     }
   }
 }

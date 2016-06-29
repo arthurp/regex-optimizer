@@ -1,5 +1,6 @@
 package org.singingwizard.regexopt
 import scala.io.Source
+import org.singingwizard.regexopt.immutable._
 
 object ManualTest {
 

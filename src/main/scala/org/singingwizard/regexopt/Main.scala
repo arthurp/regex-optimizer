@@ -1,5 +1,6 @@
 package org.singingwizard.regexopt
 import scala.io.Source
+import org.singingwizard.regexopt.mutable._
 
 object Main {
   def main(args: Array[String]) = {
@@ -20,9 +21,9 @@ object Main {
     println("Building graph...")
     val g = RegexGraph(r)
     println("Reducing graph...")
-    val g0 = GraphReduction(g)
+    GraphReduction(g)
     println("Building final regex...")
-    val r2 = GraphRegex(g0)
+    val r2 = GraphRegex(g)
     println(r2.asInstanceOf[Alternative].rs.mkString("|\n"))
   }
 }
